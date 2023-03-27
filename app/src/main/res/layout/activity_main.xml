@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <include
+        android:id="@+id/song2"
+        layout="@layout/recycler_item"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/song1"
+
+        android:layout_marginTop="124dp" />
+
+    <include
+        android:id="@+id/song2"
+        layout="@layout/recycler_item"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/song1"
+
+        android:layout_marginTop="341dp" />
+
+    <include
+        android:id="@+id/song2"
+        layout="@layout/recycler_item"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/song1"
+
+        android:layout_marginTop="448dp" />
+
+    <include
+        android:id="@+id/song2"
+        layout="@layout/recycler_item"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/song1"
+
+        android:layout_marginTop="232dp" />
+
+    <TextView
+        android:id="@+id/songsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:text="Songs"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/noSongsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="NO SONGS FOUND"
+        android:visibility="gone"></TextView>
+
+    <SearchView
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/songsText"></SearchView>
+    <!--
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/songsText">
+
+
+        </androidx.recyclerview.widget.RecyclerView>
+    -->
+
+    <include
+        android:id="@+id/song1"
+        layout="@layout/recycler_item"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchBar"
+
+        />
+
+    <include
+        android:id="@+id/song2"
+        layout="@layout/recycler_item"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/song1"
+
+        android:layout_marginTop="14dp" />
+</RelativeLayout>
