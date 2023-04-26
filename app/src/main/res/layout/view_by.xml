@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recycler_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="5dp"
+    android:background="#EFEFEF"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
+
+    <TextView
+        android:id="@+id/chooseViewing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+
+        android:layout_margin="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="10dp"
+        android:text="Choose a viewing method"
+        android:textColor="#535353"></TextView>
+
+    <RelativeLayout
+        android:id="@+id/controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="40dp"
+
+
+        >
+
+        <ImageView
+            android:id="@+id/iconView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="18dp"
+            android:src="@drawable/baseline_check_circle_24"></ImageView>
+
+        <TextView
+            android:id="@+id/bySong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_toLeftOf="@id/bySong"
+            android:layout_toEndOf="@id/iconView"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:text="View by song"
+            android:textColor="@color/black"></TextView>
+
+        <TextView
+            android:id="@+id/byAlbum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bySong"
+            android:layout_margin="10dp"
+
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/iconView"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:text="View by album"
+            android:textColor="@color/black"></TextView>
+
+        <TextView
+            android:id="@+id/byArtist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/byAlbum"
+            android:layout_margin="10dp"
+
+            android:layout_toEndOf="@id/iconView"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:text="View by artist"
+            android:textColor="@color/black"></TextView>
+
+        <TextView
+            android:id="@+id/byDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/byArtist"
+            android:layout_margin="10dp"
+
+            android:layout_toEndOf="@id/iconView"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:text="View by date"
+            android:textColor="@color/black"></TextView>
+
+        <TextView
+            android:id="@+id/byGenre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/byDate"
+            android:layout_margin="10dp"
+
+            android:layout_toEndOf="@id/iconView"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:text="View by genre"
+            android:textColor="@color/black"></TextView>
+    </RelativeLayout>
+</RelativeLayout>
