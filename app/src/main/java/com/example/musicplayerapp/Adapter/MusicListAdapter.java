@@ -1,4 +1,4 @@
-package com.example.musicplayerapp;
+package com.example.musicplayerapp.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.musicplayerapp.Model.AudioModel;
+import com.example.musicplayerapp.Activity.MusicPlayerActivity;
+import com.example.musicplayerapp.Model.MyMediaPlayer;
+import com.example.musicplayerapp.R;
 
 import java.util.ArrayList;
 
@@ -30,7 +36,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(MusicListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MusicListAdapter.ViewHolder holder, int position) {
         AudioModel songData = songsList.get(position);
         holder.titleTextView.setText(songData.getTitle());
 

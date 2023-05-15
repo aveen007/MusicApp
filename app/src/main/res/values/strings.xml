@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Music Player App</string>
+    <string name="view_by_date">View by date</string>
+    <string name="view_by_artist">View by artist</string>
+    <string name="view_by_album">View by album</string>
+    <string name="view_by_song">View by song</string>
+    <string name="open_view_by">Open view by</string>
+    <string name="close_view_by">Close view by</string>
+    <string name="todo">TODO</string>
+    <string name="search" />
+    <string name="favorites" />
+    <string name="Songs" />
 </resources>

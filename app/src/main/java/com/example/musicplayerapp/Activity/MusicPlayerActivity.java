@@ -1,4 +1,4 @@
-package com.example.musicplayerapp;
+package com.example.musicplayerapp.Activity;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -6,8 +6,14 @@ import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.musicplayerapp.DB.FavouriteOperations;
+import com.example.musicplayerapp.Model.AudioModel;
+import com.example.musicplayerapp.Model.MyMediaPlayer;
+import com.example.musicplayerapp.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,12 +21,17 @@ import java.util.concurrent.TimeUnit;
 
 public class MusicPlayerActivity extends AppCompatActivity {
 
+
+    FavouriteOperations favouriteOperations = new FavouriteOperations(this);
+    boolean isFav = false;
     TextView titleTv, currentTimeTv, totalTimeTv;
-    ImageView pausePlay, nextSong, prevSong, musicIcon;
+    ImageView pausePlay, nextSong, prevSong, musicIcon, favSong;
     SeekBar seekBar;
     ArrayList<AudioModel> songsList;
     AudioModel currentSong;
     MediaPlayer myMediaPlayer = MyMediaPlayer.getInstance();
+
+
     int a = 0;
 
     public static String convertToMMSS(String duration) {
@@ -38,6 +49,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         pausePlay.setOnClickListener(v -> pausePlay());
         nextSong.setOnClickListener(v -> playNext());
         prevSong.setOnClickListener(v -> playPrev());
+        favSong.setOnClickListener(v -> favourite());
         playMusic();
     }
 
@@ -84,6 +96,21 @@ public class MusicPlayerActivity extends AppCompatActivity {
         setResourcesWithMusic();
     }
 
+    private void favourite() {
+
+
+        if (!isFav) {
+
+
+            favouriteOperations.addSongFav(currentSong);
+
+        } else {
+
+            favouriteOperations.removeSong(currentSong.path);
+
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,9 +123,12 @@ public class MusicPlayerActivity extends AppCompatActivity {
         nextSong = findViewById(R.id.next);
         prevSong = findViewById(R.id.previous);
         musicIcon = findViewById(R.id.musicIcon);
+        favSong = findViewById(R.id.favorite_song);
 
         titleTv.setSelected(true);
         songsList = (ArrayList<AudioModel>) getIntent().getSerializableExtra("LIST");
+
+
         setResourcesWithMusic();
 
         MusicPlayerActivity.this.runOnUiThread(new Runnable() {
@@ -116,12 +146,35 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
                     }
 
+
                 }
+
                 new Handler().postDelayed(this, 100);
 
             }
 
         });
+/*        MusicPlayerActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (myMediaPlayer != null) {
+                    isFav = favouriteOperations.isFavourite(currentSong.title);
+
+
+                    if (isFav) {
+                        favSong.setImageResource(R.drawable.baseline_favorite_24);
+
+                    } else {
+                        favSong.setImageResource(R.drawable.baseline_favorite_border_24);
+
+                    }
+
+                }
+                new Handler().postDelayed(this, 100);
+
+
+            }
+        });*/
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -141,5 +194,50 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
             }
         });
+
+
+    }
+
+    @Override
+    protected void onResume() {
+
+
+        MusicPlayerActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (myMediaPlayer != null) {
+                    isFav = favouriteOperations.isFavourite(currentSong.title);
+
+
+                    if (isFav) {
+                        favSong.setImageResource(R.drawable.baseline_favorite_24);
+
+                    } else {
+                        favSong.setImageResource(R.drawable.baseline_favorite_border_24);
+
+                    }
+
+                }
+                new Handler().postDelayed(this, 100);
+
+
+            }
+        });
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+
+        favouriteOperations.close();
+        super.onPause();
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        myMediaPlayer.release();
+/*
+        handler.removeCallbacks(runnable);
+*/
     }
 }

@@ -1,11 +1,11 @@
-package com.example.musicplayerapp;
+package com.example.musicplayerapp.Model;
 
 import java.io.Serializable;
 
 public class AudioModel implements Serializable {
-    String path;
-    String title;
-    String duration;
+    public String path;
+    public String title;
+    public String duration;
 
     public AudioModel(String path, String title, String duration) {
         this.path = path;

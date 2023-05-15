@@ -1,56 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".Activity.MainActivity">
+    <!--tools:openDrawer="start"-->
 
 
-    <ImageView
-        android:id="@+id/menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/songsText"
-        android:padding="10dp"
-        android:src="@drawable/baseline_menu_24">
-
-    </ImageView>
-
-    <TextView
-        android:id="@+id/songsText"
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:padding="10dp"
-        android:text="Songs"
-        android:textColor="@color/black"
-        android:textSize="20dp"
-        android:textStyle="bold">
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#D51C47"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/view_by_header"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        
+        app:menu="@menu/view_by" />
 
-    </TextView>
 
-    <TextView
-        android:id="@+id/noSongsText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="NO SONGS FOUND"
-        android:visibility="gone"></TextView>
-
-    <SearchView
-        android:id="@+id/searchBar"
+    <RelativeLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+        </androidx.appcompat.widget.Toolbar>
+        <!--        <ImageView
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/songsText"
+                    android:padding="10dp"
+                    android:src="@drawable/baseline_menu_24">
+
+                </ImageView>-->
+
+        <TextView
+            android:id="@+id/songsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:text="Songs"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold">
+
+        </TextView>
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/songsText">
+        <TextView
+            android:id="@+id/noSongsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="NO SONGS FOUND"
+            android:visibility="gone"></TextView>
+        <!--
+
+                <SearchView
+                    android:id="@+id/searchBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/songsText"
+                    android:paddingLeft="60dp" />
+        -->
 
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/songsText">
 
 
-</RelativeLayout>
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/recyclerView"
+
+                >
+
+                <ImageView
+                    android:id="@+id/library"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="46dp"
+
+                    android:layout_marginBottom="26dp"
+                    android:src="@drawable/baseline_library_music_24"></ImageView>
+
+                <ImageView
+                    android:id="@+id/playlist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="46dp"
+
+                    android:layout_marginBottom="26dp"
+                    android:src="@drawable/baseline_playlist_play_24"></ImageView>
+
+                <ImageView
+                    android:id="@+id/favourite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="26dp"
+                    android:src="@drawable/baseline_favorite_main_24"></ImageView>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

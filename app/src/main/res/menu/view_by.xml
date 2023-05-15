@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+
+        android:id="@+id/viewBySubMenu"
+        android:title="view by"
+        app:showAsAction="never">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/byGenre"
+                    android:icon="@drawable/type_icon"
+                    android:title="view by genre"
+                    app:showAsAction="never" />
+
+                <item
+                    android:id="@+id/byDate"
+                    android:icon="@drawable/date_icon"
+                    android:title="view by date"
+                    app:showAsAction="never" />
+
+                <item
+                    android:id="@+id/byArtist"
+                    android:icon="@drawable/artist_icon"
+                    android:title="view by artist"
+                    app:showAsAction="never" />
+
+                <item
+                    android:id="@+id/byAlbum"
+                    android:title="view by album"
+android:icon="@drawable/album_icon"
+                    app:showAsAction="never" />
+
+                <item
+                    android:id="@+id/bySong"
+                    android:title="view by song"
+android:icon="@drawable/song_icon"
+                    app:showAsAction="never" />
+            </group>
+
+        </menu>
+    </item>
+
+
+</menu>

@@ -5,20 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#D51C47"
-    tools:context=".MusicPlayerActivity">
+    tools:context=".Activity.MusicPlayerActivity">
+
+    <ImageView
+        android:id="@+id/favorite_song"
+        android:layout_width="36dp"
+        android:layout_height="41dp"
+        android:layout_alignRight="@+id/songTitle"
+        android:layout_margin="10dp"
+
+        android:layout_marginTop="20dp"
+
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/baseline_favorite_border_24"></ImageView>
 
     <TextView
         android:id="@+id/songTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:ellipsize="marquee"
         android:padding="20dp"
         android:singleLine="true"
         android:text="Title of the song"
         android:textColor="@color/white"
-        android:textSize="20dp"></TextView>
+        android:textSize="20dp">
+
+    </TextView>
+
 
     <ImageView
         android:id="@+id/musicIcon"
