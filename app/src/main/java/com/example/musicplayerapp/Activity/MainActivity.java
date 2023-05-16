@@ -173,13 +173,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                searchText = queryText();
+
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 searchText = newText;
-                queryText();
+
+                searchText = queryText();
+                filter(searchText);
                 //setPagerLayout();
                 return true;
             }
@@ -187,6 +193,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return true;
 
+    }
+
+    private void filter(String s) {
+        ArrayList<AudioModel> searchedSongsList = new ArrayList<>();
+        for (AudioModel item : songsList) {
+            if (item.getTitle().toLowerCase().contains(s)) {
+                searchedSongsList.add(item);
+
+            }
+
+
+        }
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new MusicListAdapter(searchedSongsList, getApplicationContext()));
     }
 
     @Override
@@ -207,7 +227,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-
+        item.setChecked(true);
+        drawerLayout.closeDrawers();
         return true;
     }
 
