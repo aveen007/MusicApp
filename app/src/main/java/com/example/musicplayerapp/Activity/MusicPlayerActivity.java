@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -106,9 +105,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
         } else {
 
-            favouriteOperations.removeSong(currentSong.path);
+            favouriteOperations.removeSong(currentSong);
 
         }
+
+
     }
 
     @Override
@@ -129,12 +130,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
         songsList = (ArrayList<AudioModel>) getIntent().getSerializableExtra("LIST");
 
 
-        setResourcesWithMusic();
-
         MusicPlayerActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (myMediaPlayer != null) {
+                    setResourcesWithMusic();
                     seekBar.setProgress(myMediaPlayer.getCurrentPosition());
                     currentTimeTv.setText(convertToMMSS(myMediaPlayer.getCurrentPosition() + ""));
                     if (myMediaPlayer.isPlaying()) {
@@ -154,27 +154,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             }
 
         });
-/*        MusicPlayerActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (myMediaPlayer != null) {
-                    isFav = favouriteOperations.isFavourite(currentSong.title);
 
-
-                    if (isFav) {
-                        favSong.setImageResource(R.drawable.baseline_favorite_24);
-
-                    } else {
-                        favSong.setImageResource(R.drawable.baseline_favorite_border_24);
-
-                    }
-
-                }
-                new Handler().postDelayed(this, 100);
-
-
-            }
-        });*/
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -233,11 +213,5 @@ public class MusicPlayerActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    protected void onDestroy() {
-        super.onDestroy();
-        myMediaPlayer.release();
-/*
-        handler.removeCallbacks(runnable);
-*/
-    }
+
 }

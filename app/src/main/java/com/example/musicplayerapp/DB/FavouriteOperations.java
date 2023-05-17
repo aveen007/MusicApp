@@ -1,6 +1,5 @@
 package com.example.musicplayerapp.DB;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,25 +7,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-
 import com.example.musicplayerapp.Model.AudioModel;
+import com.example.musicplayerapp.R;
 
 import java.util.ArrayList;
 
 public class FavouriteOperations {
 
-    public static final String TAG = "Favorites Database";
-    private static final String[] allColumns = {
-            FavouriteDBHelper.COLUMN_ID,
-            FavouriteDBHelper.COLUMN_TITLE,
-            FavouriteDBHelper.COLUMN_DURATION,
-            FavouriteDBHelper.COLUMN_PATH
-    };
+    public static final String TAG = "Songs Database";
+    private static final String[] allColumns = {SongDBHelper.COLUMN_ID,
+
+            SongDBHelper.COLUMN_PATH,};
     SQLiteOpenHelper dbHandler;
     SQLiteDatabase database;
 
     public FavouriteOperations(Context context) {
-        dbHandler = new FavouriteDBHelper(context);
+        dbHandler = new SongDBHelper(context);
     }
 
     public void open() {
@@ -41,25 +37,27 @@ public class FavouriteOperations {
 
     public void addSongFav(AudioModel song) {
         open();
+        song.isFavourite = "1";
         ContentValues values = new ContentValues();
-        values.put(FavouriteDBHelper.COLUMN_TITLE, song.getTitle());
-        values.put(FavouriteDBHelper.COLUMN_DURATION, song.getDuration());
-        values.put(FavouriteDBHelper.COLUMN_PATH, song.getPath());
+        values.put(SongDBHelper.COLUMN_TITLE, song.getTitle());
+        values.put(SongDBHelper.COLUMN_DURATION, song.getDuration());
 
-        database.insertWithOnConflict(FavouriteDBHelper.TABLE_SONGS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        values.put(SongDBHelper.COLUMN_ARTIST, song.getArtist());
+        values.put(SongDBHelper.COLUMN_ALBUM, song.getAlbum());
+        values.put(SongDBHelper.COLUMN_FAVOURITE, "1");
+        values.put(SongDBHelper.COLUMN_PATH, song.getPath());
+        database.updateWithOnConflict(SongDBHelper.TABLE_SONGS, values, SongDBHelper.COLUMN_PATH + " = ?", new String[]{song.getPath()}, SQLiteDatabase.CONFLICT_REPLACE);
 
         close();
     }
 
     public ArrayList<AudioModel> getAllFavorites() {
         open();
-        Cursor cursor = database.query(FavouriteDBHelper.TABLE_SONGS, allColumns,
-                null, null, null, null, null);
+        Cursor cursor = database.rawQuery("select * from " + SongDBHelper.TABLE_SONGS + " WHERE " + SongDBHelper.COLUMN_FAVOURITE + " =?", new String[]{"1"});
         ArrayList<AudioModel> favSongs = new ArrayList<>();
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                AudioModel song = new AudioModel(cursor.getString(cursor.getColumnIndexOrThrow((FavouriteDBHelper.COLUMN_PATH))
-                ), cursor.getString(cursor.getColumnIndexOrThrow(FavouriteDBHelper.COLUMN_TITLE)), cursor.getString(cursor.getColumnIndexOrThrow(FavouriteDBHelper.COLUMN_DURATION)));
+                AudioModel song = new AudioModel(cursor.getString(cursor.getColumnIndexOrThrow((SongDBHelper.COLUMN_PATH))), cursor.getString(cursor.getColumnIndexOrThrow(SongDBHelper.COLUMN_TITLE)), cursor.getString(cursor.getColumnIndexOrThrow(SongDBHelper.COLUMN_DURATION)), cursor.getString(cursor.getColumnIndexOrThrow(SongDBHelper.COLUMN_ARTIST)), cursor.getString(cursor.getColumnIndexOrThrow(SongDBHelper.COLUMN_ALBUM)), cursor.getString(cursor.getColumnIndexOrThrow(SongDBHelper.COLUMN_FAVOURITE)));
                 favSongs.add(song);
             }
         }
@@ -67,20 +65,25 @@ public class FavouriteOperations {
         return favSongs;
     }
 
-    public void removeSong(String songPath) {
+    public void removeSong(AudioModel song) {
         open();
-        String whereClause =
-                FavouriteDBHelper.COLUMN_PATH + "=?";
-        String[] whereArgs = new String[]{songPath};
+        song.isFavourite = "0";
+        ContentValues values = new ContentValues();
+        values.put(SongDBHelper.COLUMN_TITLE, song.getTitle());
+        values.put(SongDBHelper.COLUMN_DURATION, song.getDuration());
 
-        database.delete(FavouriteDBHelper.TABLE_SONGS, whereClause, whereArgs);
+        values.put(SongDBHelper.COLUMN_ARTIST, song.getArtist());
+        values.put(SongDBHelper.COLUMN_ALBUM, song.getAlbum());
+        values.put(SongDBHelper.COLUMN_FAVOURITE, "0");
+        values.put(SongDBHelper.COLUMN_PATH, song.getPath());
+        database.updateWithOnConflict(SongDBHelper.TABLE_SONGS, values, SongDBHelper.COLUMN_PATH + " = ?", new String[]{song.getPath()}, SQLiteDatabase.CONFLICT_REPLACE);
         close();
     }
 
     public boolean isFavourite(String title) {
         open();
-        String Query = "Select * from " + FavouriteDBHelper.TABLE_SONGS + " where " + FavouriteDBHelper.COLUMN_TITLE + " = '" + title + "'";
-        Cursor cursor = database.rawQuery(Query, null);
+        String Query = "Select * from " + SongDBHelper.TABLE_SONGS + " where " + SongDBHelper.COLUMN_TITLE + " =? and " + SongDBHelper.COLUMN_FAVOURITE + " =? ";
+        Cursor cursor = database.rawQuery(Query, new String[]{title, "1"});
         boolean ret;
         if (cursor.getCount() <= 0) {
 
@@ -89,29 +92,8 @@ public class FavouriteOperations {
             ret = true;
         }
         cursor.close();
+        Log.i("ret", String.valueOf(ret));
+        Log.i("ret", Query);
         return ret;
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

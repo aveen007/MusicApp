@@ -10,4 +10,5 @@
     <string name="search" />
     <string name="favorites" />
     <string name="Songs" />
+    <string name="ret">ret</string>
 </resources>

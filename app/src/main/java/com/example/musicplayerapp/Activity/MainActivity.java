@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,9 +28,10 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.musicplayerapp.Adapter.MusicListAdapter;
 import com.example.musicplayerapp.DB.FavouriteOperations;
+import com.example.musicplayerapp.DB.SongDBHelper;
+import com.example.musicplayerapp.DB.SongOperations;
 import com.example.musicplayerapp.Model.AudioModel;
 import com.example.musicplayerapp.R;
-import com.google.android.material.navigation.NavigationBarMenu;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RecyclerView recyclerView;
     ArrayList<AudioModel> songsList = new ArrayList<>();
     ArrayList<AudioModel> favSongsList = new ArrayList<>();
+    SongOperations songOperations = new SongOperations(this);
     private Menu toolbarMenu;
     private String searchText = "";
 
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        this.deleteDatabase("DATABASE_NAME");
         recyclerView = findViewById(R.id.recyclerView);
         noMusicTextView = findViewById(R.id.noSongsText);
         songsTV = (TextView) findViewById(R.id.songsText);
@@ -78,18 +79,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.IS_FAVORITE,
+
 
         };
         String selection = MediaStore.Audio.Media.IS_MUSIC + " !=0";
-
+        ArrayList<AudioModel> sng = new ArrayList<>();
         Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null, null);
         while (cursor.moveToNext()) {
-            AudioModel songData = new AudioModel(cursor.getString(1), cursor.getString(0), cursor.getString(2));
-            if (new File(songData.getPath()).exists())
-                songsList.add(songData);
+            AudioModel song = new AudioModel(cursor.getString(1), cursor.getString(0), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
+            if (new File(song.getPath()).exists())
+                songsList.add(song);
+            songOperations.addSong(song);
         }
 
-
+        sng = songOperations.getAllSongs();
         if (songsList.size() == 0) {
             noMusicTextView.setVisibility(View.VISIBLE);
         } else {
