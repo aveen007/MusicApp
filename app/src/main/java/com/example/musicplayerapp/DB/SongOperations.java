@@ -77,6 +77,27 @@ public class SongOperations {
         return songs;
     }
 
+    public ArrayList<AudioModel> getAllSongsByGroup(String group) {
+        open();
+        String Query = "Select * from " + SongDBHelper.TABLE_SONGS + " group by " + group;
+
+        Cursor cursor = database.rawQuery(Query, null);
+        ArrayList<AudioModel> songs = new ArrayList<>();
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                AudioModel song = new AudioModel(cursor.getString(cursor.getColumnIndexOrThrow((SongDBHelper.COLUMN_PATH))
+                ), cursor.getString(cursor.getColumnIndexOrThrow(SongDBHelper.COLUMN_TITLE))
+                        , cursor.getString(cursor.getColumnIndexOrThrow(SongDBHelper.COLUMN_DURATION))
+                        , cursor.getString(cursor.getColumnIndexOrThrow(SongDBHelper.COLUMN_ARTIST))
+                        , cursor.getString(cursor.getColumnIndexOrThrow(SongDBHelper.COLUMN_ALBUM))
+                        , cursor.getString(cursor.getColumnIndexOrThrow(SongDBHelper.COLUMN_FAVOURITE)));
+                songs.add(song);
+            }
+        }
+        close();
+        return songs;
+    }
+
     public void removeSong(String songPath) {
         open();
         String whereClause =

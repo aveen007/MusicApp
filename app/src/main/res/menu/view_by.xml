@@ -7,21 +7,22 @@
 
         android:id="@+id/viewBySubMenu"
         android:title="view by"
+        
         app:showAsAction="never">
         <menu>
             <group android:checkableBehavior="single">
-                <item
+             <!--   <item
                     android:id="@+id/byGenre"
                     android:icon="@drawable/type_icon"
                     android:title="view by genre"
-                    app:showAsAction="never" />
+                    app:showAsAction="never" />-->
 
-                <item
+               <!-- <item
                     android:id="@+id/byDate"
                     android:icon="@drawable/date_icon"
                     android:title="view by date"
                     app:showAsAction="never" />
-
+-->
                 <item
                     android:id="@+id/byArtist"
                     android:icon="@drawable/artist_icon"

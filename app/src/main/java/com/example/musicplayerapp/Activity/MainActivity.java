@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,8 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -50,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SongOperations songOperations = new SongOperations(this);
     private Menu toolbarMenu;
     private String searchText = "";
+    private String Artist = "";
+    private String Album = "";
+    private ViewBy viewBy = ViewBy.SONG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,13 +101,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             songOperations.addSong(song);
         }
 
-        sng = songOperations.getAllSongs();
+        // sng = songOperations.getAllSongs();
+
+
+        Artist = (String) getIntent().getSerializableExtra("ARTIST");
+        Album = (String) getIntent().getSerializableExtra("ALBUM");
+        if (Artist != null) {
+
+
+            songsList = (ArrayList<AudioModel>) songsList.stream().filter(s -> s.artist.equals(Artist)).collect(Collectors.toList());
+
+        }
+        if (Album != null) {
+
+
+            songsList = (ArrayList<AudioModel>) songsList.stream().filter(s -> s.album.equals(Album)).collect(Collectors.toList());
+
+        }
+        // viewBy = ViewBy.SONG;
+
         if (songsList.size() == 0) {
             noMusicTextView.setVisibility(View.VISIBLE);
         } else {
 
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(new MusicListAdapter(songsList, getApplicationContext()));
+            recyclerView.setAdapter(new MusicListAdapter(songsList, viewBy, getApplicationContext()));
         }
 
 
@@ -112,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     boolean checkPermission() {
@@ -139,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         songsTV.setText("Songs");
 
         if (recyclerView != null) {
-            recyclerView.setAdapter(new MusicListAdapter(songsList, getApplicationContext()));
+            recyclerView.setAdapter(new MusicListAdapter(songsList, viewBy, getApplicationContext()));
         }
     }
 
@@ -155,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         songsTV.setText("Favourite Songs");
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MusicListAdapter(favSongsList, getApplicationContext()));
+        recyclerView.setAdapter(new MusicListAdapter(favSongsList, viewBy, getApplicationContext()));
     }
 
     private void displayLibrary() {
@@ -167,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MusicListAdapter(songsList, getApplicationContext()));
+        recyclerView.setAdapter(new MusicListAdapter(songsList, viewBy, getApplicationContext()));
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -212,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MusicListAdapter(searchedSongsList, getApplicationContext()));
+        recyclerView.setAdapter(new MusicListAdapter(searchedSongsList, viewBy, getApplicationContext()));
     }
 
     @Override
@@ -235,7 +261,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         item.setChecked(true);
         drawerLayout.closeDrawers();
+        switch (item.getItemId()) {
+            case R.id.byAlbum:
+                this.viewBy = ViewBy.ALBUM;
+                break;
+            case R.id.byArtist:
+                this.viewBy = ViewBy.ARTIST;
+                break;
+            case R.id.bySong:
+                this.viewBy = ViewBy.SONG;
+                break;
+        }
+        setViewBy();
         return true;
+    }
+
+    public void setViewBy() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ArrayList<AudioModel> groupedSongs = songOperations.getAllSongsByGroup(viewBy.toString());
+        recyclerView.setAdapter(new MusicListAdapter(groupedSongs, viewBy, getApplicationContext()));
+
     }
 
     @Override
