@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String Artist = "";
     private String Album = "";
     private ViewBy viewBy = ViewBy.SONG;
+    private boolean favouriteFlag = false;
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
@@ -169,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         FavouriteOperations favouriteOperations = new FavouriteOperations(this);
         favSongsList = favouriteOperations.getAllFavorites();
+        viewBy = ViewBy.SONG;
         if (favSongsList.size() == 0) {
             noMusicTextView.setVisibility(View.VISIBLE);
         } else {
@@ -283,6 +285,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this.viewBy = ViewBy.SONG;
                 break;
         }
+        songsTV.setText("Songs");
         setViewBy();
         return true;
     }
