@@ -44,6 +44,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     void setResourcesWithMusic() {
         currentSong = songsList.get(MyMediaPlayer.currentIndex);
+        Log.wtf("wtf ", String.valueOf(songsList.size()));
         titleTv.setText(currentSong.title);
         totalTimeTv.setText(convertToMMSS(currentSong.getDuration()));
         pausePlay.setOnClickListener(v -> {
@@ -84,7 +85,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         if (myMediaPlayer.isPlaying()) {
             myMediaPlayer.pause();
         } else {
-            myMediaPlayer.prepare();
+            // myMediaPlayer.prepare();
             myMediaPlayer.start();
         }
     }
@@ -141,15 +142,15 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
         titleTv.setSelected(true);
         songsList = (ArrayList<AudioModel>) getIntent().getSerializableExtra("LIST");
-
+        setResourcesWithMusic();
 
         MusicPlayerActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (myMediaPlayer != null) {
-                    setResourcesWithMusic();
+
                     seekBar.setProgress(myMediaPlayer.getCurrentPosition());
-                    Log.wtf("time ", convertToMMSS(myMediaPlayer.getCurrentPosition() + ""));
+                    //  Log.wtf("time ", convertToMMSS(myMediaPlayer.getCurrentPosition() + ""));
                     currentTimeTv.setText(convertToMMSS(myMediaPlayer.getCurrentPosition() + ""));
                     if (myMediaPlayer.isPlaying()) {
                         pausePlay.setImageResource(R.drawable.baseline_pause_circle_outline_24);

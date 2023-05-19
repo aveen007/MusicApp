@@ -301,3 +301,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onPointerCaptureChanged(hasCapture);
     }
 }
+
+//TODO: when switching view by method then the first song plays immediately and sometime array index out of bounds exception
+// TODO: the progress bar stays at the end
+//TODO: the

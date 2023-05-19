@@ -58,20 +58,21 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.View
                 break;
         }
 
-
-        if (MyMediaPlayer.currentIndex == position) {
-            holder.titleTextView.setTextColor(Color.parseColor("#FF0000"));
-        } else {
-            holder.titleTextView.setTextColor(Color.parseColor("#000000"));
+        if (viewBy.equals(ViewBy.SONG)) {
+            if (MyMediaPlayer.currentIndex == position) {
+                holder.titleTextView.setTextColor(Color.parseColor("#FF0000"));
+            } else {
+                holder.titleTextView.setTextColor(Color.parseColor("#000000"));
+            }
         }
-
         holder.itemView.setOnClickListener(v -> {
             //navigate to another activity
-            MyMediaPlayer.getInstance().reset();
-            MyMediaPlayer.currentIndex = holder.getAdapterPosition();
+
             switch (viewBy) {
                 case SONG:
 
+                    MyMediaPlayer.getInstance().reset();
+                    MyMediaPlayer.currentIndex = holder.getAdapterPosition();
                     Intent intent = new Intent(context, MusicPlayerActivity.class);
                     intent.putExtra("LIST", songsList);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -80,14 +81,14 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.View
                 case ARTIST:
 
                     Intent intent2 = new Intent(context, MainActivity.class);
-                    intent2.putExtra("ARTIST", songsList.get(MyMediaPlayer.currentIndex).getArtist());
+                    intent2.putExtra("ARTIST", songsList.get(position).getArtist());
                     intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent2);
                     break;
                 case ALBUM:
 
                     Intent intent3 = new Intent(context, MainActivity.class);
-                    intent3.putExtra("ALBUM", songsList.get(MyMediaPlayer.currentIndex).getAlbum());
+                    intent3.putExtra("ALBUM", songsList.get(position).getAlbum());
                     intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent3);
                     break;
