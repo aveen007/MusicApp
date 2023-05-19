@@ -223,7 +223,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void filter(String s) {
         ArrayList<AudioModel> searchedSongsList = new ArrayList<>();
         for (AudioModel item : songsList) {
-            if (item.getTitle().toLowerCase().contains(s)) {
+            String searchString = "";
+            switch (viewBy) {
+                case SONG:
+                    searchString = item.getTitle();
+                    break;
+                case ALBUM:
+                    searchString = item.getAlbum();
+                    break;
+                case ARTIST:
+                    searchString = item.getArtist();
+                    break;
+
+            }
+            if (searchString.toLowerCase().contains(s)) {
                 searchedSongsList.add(item);
 
             }

@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 public class SongOperations {
 
-    public static final String TAG = "Songs Database";
     private static final String[] allColumns = {
             SongDBHelper.COLUMN_ID,
             SongDBHelper.COLUMN_TITLE,
