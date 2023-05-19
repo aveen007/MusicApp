@@ -2,8 +2,6 @@ package com.example.musicplayerapp.Model;
 
 import android.media.MediaPlayer;
 
-import java.util.ArrayList;
-
 public class MyMediaPlayer {
 
     public static int currentIndex = -1;

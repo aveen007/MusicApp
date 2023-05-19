@@ -5,19 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.example.musicplayerapp.Model.AudioModel;
-import com.example.musicplayerapp.R;
 
 import java.util.ArrayList;
 
 public class FavouriteOperations {
 
-    public static final String TAG = "Songs Database";
-    private static final String[] allColumns = {SongDBHelper.COLUMN_ID,
-
-            SongDBHelper.COLUMN_PATH,};
     SQLiteOpenHelper dbHandler;
     SQLiteDatabase database;
 
@@ -26,12 +20,12 @@ public class FavouriteOperations {
     }
 
     public void open() {
-        Log.i(TAG, " Database Opened");
+        //   Log.i(TAG, " Database Opened");
         database = dbHandler.getWritableDatabase();
     }
 
     public void close() {
-        Log.i(TAG, "Database Closed");
+        //   Log.i(TAG, "Database Closed");
         dbHandler.close();
     }
 
@@ -61,6 +55,7 @@ public class FavouriteOperations {
                 favSongs.add(song);
             }
         }
+        cursor.close();
         close();
         return favSongs;
     }
@@ -85,15 +80,9 @@ public class FavouriteOperations {
         String Query = "Select * from " + SongDBHelper.TABLE_SONGS + " where " + SongDBHelper.COLUMN_TITLE + " =? and " + SongDBHelper.COLUMN_FAVOURITE + " =? ";
         Cursor cursor = database.rawQuery(Query, new String[]{title, "1"});
         boolean ret;
-        if (cursor.getCount() <= 0) {
-
-            ret = false;
-        } else {
-            ret = true;
-        }
+        ret = cursor.getCount() > 0;
         cursor.close();
-        Log.i("ret", String.valueOf(ret));
-        Log.i("ret", Query);
+
         return ret;
     }
 }

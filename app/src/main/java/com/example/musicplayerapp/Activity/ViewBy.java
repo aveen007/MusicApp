@@ -1,20 +1,18 @@
 package com.example.musicplayerapp.Activity;
 
+import androidx.annotation.NonNull;
+
 public enum ViewBy {
 
     ARTIST("artist"), ALBUM("album"), SONG("title");
 
-    public String name;
+    public final String name;
 
     ViewBy(String name) {
         this.name = name;
     }
 
-    public boolean equalsName(String otherName) {
-        // (otherName == null) check is not needed because name.equals(null) returns false
-        return name.equals(otherName);
-    }
-
+    @NonNull
     public String toString() {
         return this.name;
     }

@@ -4,9 +4,9 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,21 +15,20 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 
 import com.example.musicplayerapp.Adapter.MusicListAdapter;
 import com.example.musicplayerapp.DB.FavouriteOperations;
-import com.example.musicplayerapp.DB.SongDBHelper;
 import com.example.musicplayerapp.DB.SongOperations;
 import com.example.musicplayerapp.Model.AudioModel;
 import com.example.musicplayerapp.R;
@@ -37,6 +36,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -51,12 +51,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ArrayList<AudioModel> songsList = new ArrayList<>();
     ArrayList<AudioModel> favSongsList = new ArrayList<>();
     SongOperations songOperations = new SongOperations(this);
-    private Menu toolbarMenu;
     private String searchText = "";
     private String Artist = "";
     private String Album = "";
     private ViewBy viewBy = ViewBy.SONG;
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.deleteDatabase("DATABASE_NAME");
         recyclerView = findViewById(R.id.recyclerView);
         noMusicTextView = findViewById(R.id.noSongsText);
-        songsTV = (TextView) findViewById(R.id.songsText);
+        songsTV = findViewById(R.id.songsText);
         drawerLayout = findViewById(R.id.drawer);
         favourites = findViewById(R.id.favourite);
         favourites.setOnClickListener(v -> displayFavourites());
@@ -74,10 +74,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolBar = findViewById(R.id.toolbar);
         toolBar.setNavigationIcon(R.drawable.baseline_menu_24);
         setSupportActionBar(toolBar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         // setSupportActionBar(toolBar);
         navigationView = findViewById(R.id.nav_view);
-        if (checkPermission() == false) {
+        if (!checkPermission()) {
             requestPermission();
             return;
         }
@@ -92,15 +92,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         };
         String selection = MediaStore.Audio.Media.IS_MUSIC + " !=0";
-        ArrayList<AudioModel> sng = new ArrayList<>();
         Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null, null);
         while (cursor.moveToNext()) {
             AudioModel song = new AudioModel(cursor.getString(1), cursor.getString(0), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
             if (new File(song.getPath()).exists())
                 songsList.add(song);
-            songOperations.addSong(song);
+            if (!songOperations.isSong(song.getTitle())) {
+                songOperations.addSong(song);
+            }
         }
-
+        cursor.close();
         // sng = songOperations.getAllSongs();
 
 
@@ -123,9 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (songsList.size() == 0) {
             noMusicTextView.setVisibility(View.VISIBLE);
         } else {
-
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(new MusicListAdapter(songsList, viewBy, getApplicationContext()));
+            getSongListInActivity(songsList);
         }
 
 
@@ -142,10 +141,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE);
-        if (result == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        return false;
+        return result == PackageManager.PERMISSION_GRANTED;
     }
 
     void requestPermission() {
@@ -165,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         songsTV.setText("Songs");
 
         if (recyclerView != null) {
-            recyclerView.setAdapter(new MusicListAdapter(songsList, viewBy, getApplicationContext()));
+            getSongListInActivity(songsList);
         }
     }
 
@@ -180,8 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
         songsTV.setText("Favourite Songs");
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MusicListAdapter(favSongsList, viewBy, getApplicationContext()));
+        getSongListInActivity(favSongsList);
     }
 
     private void displayLibrary() {
@@ -192,12 +187,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             noMusicTextView.setVisibility(View.GONE);
 
         }
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MusicListAdapter(songsList, viewBy, getApplicationContext()));
+        getSongListInActivity(songsList);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.toolbarMenu = menu;
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
@@ -237,8 +230,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         }
+        getSongListInActivity(searchedSongsList);
+
+    }
+
+    public void getSongListInActivity(ArrayList<AudioModel> songs) {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MusicListAdapter(searchedSongsList, viewBy, getApplicationContext()));
+        recyclerView.setAdapter(new MusicListAdapter(songs, viewBy, getApplicationContext()));
     }
 
     @Override
@@ -277,9 +275,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void setViewBy() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ArrayList<AudioModel> groupedSongs = songOperations.getAllSongsByGroup(viewBy.toString());
-        recyclerView.setAdapter(new MusicListAdapter(groupedSongs, viewBy, getApplicationContext()));
+        getSongListInActivity(groupedSongs);
 
     }
 

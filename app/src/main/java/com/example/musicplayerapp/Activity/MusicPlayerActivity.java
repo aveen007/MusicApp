@@ -3,6 +3,7 @@ package com.example.musicplayerapp.Activity;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.example.musicplayerapp.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class MusicPlayerActivity extends AppCompatActivity {
@@ -34,25 +36,33 @@ public class MusicPlayerActivity extends AppCompatActivity {
     int a = 0;
 
     public static String convertToMMSS(String duration) {
-        Long millies = Long.parseLong(duration);
+        long millis = Long.parseLong(duration);
 
-        String s = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(millies) % TimeUnit.HOURS.toMinutes(1),
-                TimeUnit.MILLISECONDS.toSeconds(millies) % TimeUnit.MINUTES.toSeconds(1));
-        return s;
+        return String.format(Locale.getDefault(), "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
+                TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
     }
 
     void setResourcesWithMusic() {
         currentSong = songsList.get(MyMediaPlayer.currentIndex);
         titleTv.setText(currentSong.title);
         totalTimeTv.setText(convertToMMSS(currentSong.getDuration()));
-        pausePlay.setOnClickListener(v -> pausePlay());
+        pausePlay.setOnClickListener(v -> {
+            try {
+                pausePlay();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         nextSong.setOnClickListener(v -> playNext());
         prevSong.setOnClickListener(v -> playPrev());
         favSong.setOnClickListener(v -> favourite());
-        playMusic();
+        if (!MyMediaPlayer.getInstance().isPlaying()) {
+            playMusic();
+        }
     }
 
     private void playMusic() {
+
         myMediaPlayer.reset();
         try {
             myMediaPlayer.setDataSource(currentSong.getPath());
@@ -66,12 +76,15 @@ public class MusicPlayerActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
+
     }
 
-    private void pausePlay() {
+
+    private void pausePlay() throws IOException {
         if (myMediaPlayer.isPlaying()) {
             myMediaPlayer.pause();
         } else {
+            myMediaPlayer.prepare();
             myMediaPlayer.start();
         }
     }
@@ -136,6 +149,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 if (myMediaPlayer != null) {
                     setResourcesWithMusic();
                     seekBar.setProgress(myMediaPlayer.getCurrentPosition());
+                    Log.wtf("time ", convertToMMSS(myMediaPlayer.getCurrentPosition() + ""));
                     currentTimeTv.setText(convertToMMSS(myMediaPlayer.getCurrentPosition() + ""));
                     if (myMediaPlayer.isPlaying()) {
                         pausePlay.setImageResource(R.drawable.baseline_pause_circle_outline_24);
@@ -204,13 +218,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
             }
         });
         super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-
-        favouriteOperations.close();
-        super.onPause();
     }
 
 

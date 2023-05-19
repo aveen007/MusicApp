@@ -6,8 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
 
 import com.example.musicplayerapp.Model.AudioModel;
 
@@ -33,12 +31,12 @@ public class SongOperations {
     }
 
     public void open() {
-        Log.i(TAG, " Database Opened");
+        //  Log.i(TAG, " Database Opened");
         database = dbHandler.getWritableDatabase();
     }
 
     public void close() {
-        Log.i(TAG, "Database Closed");
+        //     Log.i(TAG, "Database Closed");
         dbHandler.close();
     }
 
@@ -73,6 +71,7 @@ public class SongOperations {
                 songs.add(song);
             }
         }
+        cursor.close();
         close();
         return songs;
     }
@@ -94,6 +93,7 @@ public class SongOperations {
                 songs.add(song);
             }
         }
+        cursor.close();
         close();
         return songs;
     }
@@ -129,12 +129,7 @@ public class SongOperations {
         String Query = "Select * from " + SongDBHelper.TABLE_SONGS + " where " + SongDBHelper.COLUMN_TITLE + " = '" + title + "'";
         Cursor cursor = database.rawQuery(Query, null);
         boolean ret;
-        if (cursor.getCount() <= 0) {
-
-            ret = false;
-        } else {
-            ret = true;
-        }
+        ret = cursor.getCount() > 0;
         cursor.close();
         return ret;
     }
