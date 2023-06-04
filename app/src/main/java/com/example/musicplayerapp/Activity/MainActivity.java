@@ -10,7 +10,9 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -89,11 +91,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         toolBar1.setNavigationIcon(R.drawable.baseline_add_24);
         toolBar1.setVisibility(View.GONE);
-
-        setSupportActionBar(toolBar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         setSupportActionBar(toolBar1);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+        setSupportActionBar(toolBar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+
+
         // toolBar1.setOnClickListener(v -> displayCreatePlayList());
         toolBar1.setNavigationOnClickListener(v -> displayCreatePlayList());
         // setSupportActionBar(toolBar);
@@ -190,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         inPlaylist = false;
 
         toolBar.setVisibility(View.VISIBLE);
-        toolBar1.setVisibility(View.GONE);
+        toolBar1.setVisibility(View.INVISIBLE);
         FavouriteOperations favouriteOperations = new FavouriteOperations(this);
         favSongsList = favouriteOperations.getAllFavorites();
         viewBy = ViewBy.SONG;
@@ -207,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void displayLibrary() {
         inPlaylist = false;
         toolBar.setVisibility(View.VISIBLE);
-        toolBar1.setVisibility(View.GONE);
+        toolBar1.setVisibility(View.INVISIBLE);
         songsTV.setText("Songs");
         if (songsList.size() == 0) {
             noMusicTextView.setVisibility(View.VISIBLE);
@@ -223,7 +226,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         inPlaylist = true;
 
 
-        toolBar.setVisibility(View.GONE);
+        toolBar.setVisibility(View.INVISIBLE);
+        // toolBar.setNavigationIcon(0);
         toolBar1.setVisibility(View.VISIBLE);
         PlaylistOperations playlistOperations = new PlaylistOperations(this);
         ArrayList<PlaylistModel> playlists = playlistOperations.getAllPlaylists();
@@ -235,6 +239,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
         songsTV.setText("Playlists");
+//        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        params.addRule(RelativeLayout.BELOW, R.id.toolbarPlaylist);
+//        songsTV.setLayoutParams(params);
         getPlaylistInActivity(playlists);
     }
 

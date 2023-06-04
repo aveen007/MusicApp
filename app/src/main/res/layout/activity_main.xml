@@ -48,7 +48,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
         </androidx.appcompat.widget.Toolbar>
@@ -57,10 +56,7 @@
             android:id="@+id/toolbarPlaylist"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
-
-        </androidx.appcompat.widget.Toolbar>
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"></androidx.appcompat.widget.Toolbar>
 
         <TextView
             android:id="@+id/noSongsText"
