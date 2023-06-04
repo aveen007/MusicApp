@@ -13,7 +13,7 @@ public class PlaylistSongHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PLAYLISTNAME = "playlistName";
     public static final String COLUMN_SONGPATH = "songPath";
 
-    private static final String DATABASE_NAME = "songs.db";
+    private static final String DATABASE_NAME = "songs2.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_CREATE = "CREATE TABLE " + TABLE_PLAYLISTSONG + " (" + COLUMN_ID
             + " INTEGER PRIMARY KEY, " +

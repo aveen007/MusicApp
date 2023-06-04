@@ -100,6 +100,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.View
 
     }
 
+    //TODO: the color red is being put to the wrong index when switching between view Bys
     @Override
     public int getItemCount() {
         return songsList.size();

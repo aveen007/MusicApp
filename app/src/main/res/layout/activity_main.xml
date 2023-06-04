@@ -53,12 +53,21 @@
 
         </androidx.appcompat.widget.Toolbar>
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarPlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+        </androidx.appcompat.widget.Toolbar>
+
         <TextView
             android:id="@+id/noSongsText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="NO SONGS FOUND"
+            android:text="NO MUSIC FOUND"
             android:visibility="gone"></TextView>
         <!--
 

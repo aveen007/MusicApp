@@ -28,22 +28,28 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.musicplayerapp.Adapter.MusicListAdapter;
+import com.example.musicplayerapp.Adapter.PlaylistAdapeter;
 import com.example.musicplayerapp.DB.FavouriteOperations;
+import com.example.musicplayerapp.DB.PlaylistOperations;
 import com.example.musicplayerapp.DB.SongOperations;
 import com.example.musicplayerapp.Model.AudioModel;
+import com.example.musicplayerapp.Model.PlaylistModel;
 import com.example.musicplayerapp.R;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    Toolbar toolBar;
-    ImageView favourites, library;
+    boolean inPlaylist = false;
+
+    Toolbar toolBar, toolBar1;
+    ImageView favourites, library, playlists;
     NavigationView navigationView;
     DrawerLayout drawerLayout;
     TextView noMusicTextView, songsTV;
@@ -62,20 +68,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.deleteDatabase("DATABASE_NAME");
+        //      this.deleteDatabase("DATABASE_NAME");
         recyclerView = findViewById(R.id.recyclerView);
         noMusicTextView = findViewById(R.id.noSongsText);
         songsTV = findViewById(R.id.songsText);
         drawerLayout = findViewById(R.id.drawer);
         favourites = findViewById(R.id.favourite);
+        playlists = findViewById(R.id.playlist);
         favourites.setOnClickListener(v -> displayFavourites());
+        playlists.setOnClickListener(v -> displayPlaylists());
         library = findViewById(R.id.library);
         library.setOnClickListener(v -> displayLibrary());
         songsTV.setText("Songs");
+
+
         toolBar = findViewById(R.id.toolbar);
+        toolBar1 = findViewById(R.id.toolbarPlaylist);
+
         toolBar.setNavigationIcon(R.drawable.baseline_menu_24);
+
+        toolBar1.setNavigationIcon(R.drawable.baseline_add_24);
+        toolBar1.setVisibility(View.GONE);
+
         setSupportActionBar(toolBar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+        setSupportActionBar(toolBar1);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+        // toolBar1.setOnClickListener(v -> displayCreatePlayList());
+        toolBar1.setNavigationOnClickListener(v -> displayCreatePlayList());
         // setSupportActionBar(toolBar);
         navigationView = findViewById(R.id.nav_view);
         if (!checkPermission()) {
@@ -167,7 +187,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void displayFavourites() {
+        inPlaylist = false;
 
+        toolBar.setVisibility(View.VISIBLE);
+        toolBar1.setVisibility(View.GONE);
         FavouriteOperations favouriteOperations = new FavouriteOperations(this);
         favSongsList = favouriteOperations.getAllFavorites();
         viewBy = ViewBy.SONG;
@@ -182,6 +205,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void displayLibrary() {
+        inPlaylist = false;
+        toolBar.setVisibility(View.VISIBLE);
+        toolBar1.setVisibility(View.GONE);
         songsTV.setText("Songs");
         if (songsList.size() == 0) {
             noMusicTextView.setVisibility(View.VISIBLE);
@@ -190,6 +216,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
         getSongListInActivity(songsList);
+    }
+
+    private void displayPlaylists() {
+
+        inPlaylist = true;
+
+
+        toolBar.setVisibility(View.GONE);
+        toolBar1.setVisibility(View.VISIBLE);
+        PlaylistOperations playlistOperations = new PlaylistOperations(this);
+        ArrayList<PlaylistModel> playlists = playlistOperations.getAllPlaylists();
+
+        if (playlists.size() == 0) {
+            noMusicTextView.setVisibility(View.VISIBLE);
+        } else {
+            noMusicTextView.setVisibility(View.GONE);
+
+        }
+        songsTV.setText("Playlists");
+        getPlaylistInActivity(playlists);
+    }
+
+    void displayCreatePlayList() {
+
+        PlaylistDialog playlistDialog = new PlaylistDialog();
+        playlistDialog.show(getSupportFragmentManager(), "Create playlist dialog");
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -252,6 +304,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void getSongListInActivity(ArrayList<AudioModel> songs) {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new MusicListAdapter(songs, viewBy, getApplicationContext()));
+    }
+
+    public void getPlaylistInActivity(ArrayList<PlaylistModel> playlists) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new PlaylistAdapeter(playlists, getApplicationContext()));
     }
 
     @Override
