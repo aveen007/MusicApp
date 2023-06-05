@@ -40,7 +40,7 @@ public class PlaylistOperations {
     public void addPlayList(PlaylistModel playlistModel) {
         open();
         ContentValues values = new ContentValues();
-        values.put(PlaylistDBHelper.COLUMN_ID, playlistModel.getName());
+        values.put(PlaylistDBHelper.COLUMN_NAME, playlistModel.getName());
 
 
         database.insertWithOnConflict(PlaylistDBHelper.TABLE_PLAYLIST, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -64,8 +64,18 @@ public class PlaylistOperations {
         return playlists;
     }
 
+    public void removePlaylists() {
+        open();
+
+
+        database.delete(PlaylistDBHelper.TABLE_PLAYLIST, null, null);
+        close();
+    }
+
+
     public void removePlaylist(String name) {
         open();
+
         String whereClause =
                 PlaylistDBHelper.COLUMN_NAME + "=?";
         String[] whereArgs = new String[]{name};

@@ -6,6 +6,7 @@ public class PlaylistModel implements Serializable {
 
 
     String name;
+    String id;
 
     public PlaylistModel(String name) {
         this.name = name;
@@ -13,6 +14,7 @@ public class PlaylistModel implements Serializable {
 
     public String getName() {
         return name;
+
     }
 
     public void setName(String name) {

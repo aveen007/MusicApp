@@ -46,7 +46,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, PlaylistDialog.PlaylistDialogListener {
 
     boolean inPlaylist = false;
 
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     DrawerLayout drawerLayout;
     TextView noMusicTextView, songsTV;
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, recyclerViewPlaylist;
     ArrayList<AudioModel> songsList = new ArrayList<>();
     ArrayList<AudioModel> favSongsList = new ArrayList<>();
     SongOperations songOperations = new SongOperations(this);
@@ -187,6 +187,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (recyclerView != null) {
             getSongListInActivity(songsList);
         }
+        toolBar.setVisibility(View.VISIBLE);
+        toolBar1.setVisibility(View.INVISIBLE);
     }
 
     private void displayFavourites() {
@@ -231,7 +233,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolBar1.setVisibility(View.VISIBLE);
         PlaylistOperations playlistOperations = new PlaylistOperations(this);
         ArrayList<PlaylistModel> playlists = playlistOperations.getAllPlaylists();
-
         if (playlists.size() == 0) {
             noMusicTextView.setVisibility(View.VISIBLE);
         } else {
@@ -242,13 +243,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        params.addRule(RelativeLayout.BELOW, R.id.toolbarPlaylist);
 //        songsTV.setLayoutParams(params);
-        getPlaylistInActivity(playlists);
+        getPlaylistInActivity();
     }
 
     void displayCreatePlayList() {
 
         PlaylistDialog playlistDialog = new PlaylistDialog();
         playlistDialog.show(getSupportFragmentManager(), "Create playlist dialog");
+
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -313,9 +316,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerView.setAdapter(new MusicListAdapter(songs, viewBy, getApplicationContext()));
     }
 
-    public void getPlaylistInActivity(ArrayList<PlaylistModel> playlists) {
+    public void getPlaylistInActivity() {
+        PlaylistOperations playlistOperations = new PlaylistOperations(this);
+
+        ArrayList<PlaylistModel> playlists = playlistOperations.getAllPlaylists();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new PlaylistAdapeter(playlists, getApplicationContext()));
+        recyclerView.setAdapter(new PlaylistAdapeter(playlists, getApplicationContext(), noMusicTextView));
     }
 
     @Override
@@ -363,6 +369,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
+    }
+
+    @Override
+    public void applyText(String playlistName) {
+        PlaylistModel playlist = new PlaylistModel(playlistName);
+        PlaylistOperations playlistOperations = new PlaylistOperations(this);
+        playlistOperations.addPlayList(playlist);
+        getPlaylistInActivity();
     }
 }
 
