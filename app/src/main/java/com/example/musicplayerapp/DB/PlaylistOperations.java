@@ -87,9 +87,9 @@ public class PlaylistOperations {
     public void updatePlaylist(PlaylistModel playlist, String name) {
         open();
         ContentValues values = new ContentValues();
-        values.put(PlaylistDBHelper.TABLE_PLAYLIST, name);
+        values.put(PlaylistDBHelper.COLUMN_NAME, name);
 
-        database.updateWithOnConflict(PlaylistDBHelper.TABLE_PLAYLIST, values, PlaylistDBHelper.COLUMN_NAME + " = ?", new String[]{playlist.getName()}, SQLiteDatabase.CONFLICT_REPLACE);
+        database.updateWithOnConflict(PlaylistDBHelper.TABLE_PLAYLIST, values, PlaylistDBHelper.COLUMN_NAME + " = '" + playlist.getName() + "'", null, SQLiteDatabase.CONFLICT_REPLACE);
 
         close();
     }
@@ -108,5 +108,17 @@ public class PlaylistOperations {
         }
         cursor.close();
         return ret;
+    }
+
+    public PlaylistModel getPlaylist(String name) {
+        open();
+        String Query = "Select * from " + PlaylistDBHelper.TABLE_PLAYLIST + " where " + PlaylistDBHelper.COLUMN_NAME + " = '" + name + "'";
+        Cursor cursor = database.rawQuery(Query, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToNext();
+            PlaylistModel playlist = new PlaylistModel(cursor.getString(cursor.getColumnIndexOrThrow((PlaylistDBHelper.COLUMN_NAME))));
+            return playlist;
+        }
+        return null;
     }
 }

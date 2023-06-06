@@ -14,10 +14,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.musicplayerapp.Activity.EditPlaylistDialogue;
 import com.example.musicplayerapp.Activity.MainActivity;
 import com.example.musicplayerapp.Activity.MusicPlayerActivity;
+import com.example.musicplayerapp.Activity.PlaylistDialog;
 import com.example.musicplayerapp.Activity.ViewBy;
 import com.example.musicplayerapp.DB.PlaylistOperations;
 import com.example.musicplayerapp.Model.AudioModel;
@@ -55,6 +59,7 @@ public class PlaylistAdapeter extends RecyclerView.Adapter<PlaylistAdapeter.View
 
         return new PlaylistAdapeter.ViewHolderPlaylist(view);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull PlaylistAdapeter.ViewHolderPlaylist holder, int position) {
@@ -101,7 +106,8 @@ public class PlaylistAdapeter extends RecyclerView.Adapter<PlaylistAdapeter.View
     public boolean onMenuItemClick(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.Edit:
-                EditPlayList();
+                String oldPlaylistName = playlists.get(currentPos).getName();
+                EditPlayList(oldPlaylistName);
                 break;
             case R.id.Delete:
 
@@ -111,7 +117,13 @@ public class PlaylistAdapeter extends RecyclerView.Adapter<PlaylistAdapeter.View
         return false;
     }
 
-    public void EditPlayList() {
+    public void EditPlayList(String oldPlaylistName) {
+        EditPlaylistDialogue playlistDialog = new EditPlaylistDialogue(oldPlaylistName);
+        FragmentActivity fragmentActivity = (FragmentActivity) (context);
+        FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
+        playlistDialog.show(fragmentManager, "edit playlist");
+
+
     }
 
     public void DeletePlayList(int index) {

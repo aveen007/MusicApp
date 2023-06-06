@@ -46,7 +46,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, PlaylistDialog.PlaylistDialogListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, PlaylistDialog.PlaylistDialogListener, EditPlaylistDialogue.PlaylistDialogListener {
 
     boolean inPlaylist = false;
 
@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         ArrayList<PlaylistModel> playlists = playlistOperations.getAllPlaylists();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new PlaylistAdapeter(playlists, getApplicationContext(), noMusicTextView));
+        recyclerView.setAdapter(new PlaylistAdapeter(playlists, this, noMusicTextView));
     }
 
     @Override
@@ -378,8 +378,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         playlistOperations.addPlayList(playlist);
         getPlaylistInActivity();
     }
+
+    @Override
+    public void applyEditText(String playlistName, String oldPlaylistName) {
+        PlaylistOperations playlistOperations = new PlaylistOperations(this);
+        PlaylistModel playlist = playlistOperations.getPlaylist(oldPlaylistName);
+
+        playlistOperations.updatePlaylist(playlist, playlistName);
+        //  new PlaylistAdapeter(playlists,this).notifyDataSetChanged();
+        getPlaylistInActivity();
+
+    }
 }
 
 //TODO: when switching view by method then the first song plays immediately and sometime array index out of bounds exception
 // TODO: the progress bar stays at the end
-//TODO: the
+//TODO: when there are too many recyclerviews things get messy with the bar underneath
