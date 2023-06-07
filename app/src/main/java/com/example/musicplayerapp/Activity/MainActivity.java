@@ -385,7 +385,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         PlaylistModel playlist = playlistOperations.getPlaylist(oldPlaylistName);
 
         playlistOperations.updatePlaylist(playlist, playlistName);
-        //  new PlaylistAdapeter(playlists,this).notifyDataSetChanged();
         getPlaylistInActivity();
 
     }

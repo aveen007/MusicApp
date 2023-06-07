@@ -29,8 +29,8 @@
         android:text="Music"
         android:textColor="@color/black"></TextView>
 
-    <ImageView
-        android:id="@+id/morePlaylist"
+    <CheckBox
+        android:id="@+id/checkbox"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

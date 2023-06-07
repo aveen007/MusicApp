@@ -16,9 +16,9 @@ public class SongDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ARTIST = "artist";
     public static final String COLUMN_ALBUM = "album";
     public static final String COLUMN_FAVOURITE = "favourite";
-    private static final String DATABASE_NAME = "songs2.db";
+    private static final String DATABASE_NAME = "songs17.db";
     private static final int DATABASE_VERSION = 1;
-    private static final String TABLE_CREATE = "CREATE TABLE " + TABLE_SONGS + " (" + COLUMN_ID
+    private static final String TABLE_CREATE_SONG = "CREATE TABLE " + TABLE_SONGS + " (" + COLUMN_ID
             + " INTEGER, " + COLUMN_TITLE
             + " TEXT, " + COLUMN_DURATION
             + " TEXT, " + COLUMN_ARTIST
@@ -36,14 +36,24 @@ public class SongDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TABLE_CREATE);
-
+        db.execSQL(TABLE_CREATE_SONG);
+        db.execSQL(PlaylistDBHelper.TABLE_CREATE_PLAYLIST);
+        try {
+            db.execSQL(PlaylistSongHelper.TABLE_CREATE_SONG_PLAYLIST);
+        } catch (Exception e) {
+            Log.wtf("wtf ", PlaylistSongHelper.TABLE_CREATE_SONG_PLAYLIST);
+        }
+        String s = "";
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SONGS);
-        db.execSQL(TABLE_CREATE);
+        db.execSQL("DROP TABLE IF EXISTS " + PlaylistDBHelper.TABLE_PLAYLIST);
+        db.execSQL("DROP TABLE IF EXISTS " + PlaylistSongHelper.TABLE_PLAYLISTSONG);
+        db.execSQL(TABLE_CREATE_SONG);
+        db.execSQL(PlaylistDBHelper.TABLE_CREATE_PLAYLIST);
+        db.execSQL(PlaylistSongHelper.TABLE_CREATE_SONG_PLAYLIST);
     }
 
 

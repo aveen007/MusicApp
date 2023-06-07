@@ -7,33 +7,47 @@
     android:background="#D51C47"
     tools:context=".Activity.MusicPlayerActivity">
 
-    <ImageView
-        android:id="@+id/favorite_song"
-        android:layout_width="36dp"
-        android:layout_height="41dp"
-        android:layout_alignRight="@+id/songTitle"
-        android:layout_margin="10dp"
-
+    <RelativeLayout
+        android:id="@+id/options_song"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp">
 
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/baseline_favorite_border_24"></ImageView>
+        <ImageView
+            android:id="@+id/favorite_song"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/moreSongPlaylist"
+
+            android:src="@drawable/baseline_favorite_border_24"></ImageView>
+
+        <ImageView
+            android:id="@+id/moreSongPlaylist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/baseline_more_vert_24" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/songTitle"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/options_song"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="71dp"
         android:layout_marginBottom="20dp"
         android:ellipsize="marquee"
         android:padding="20dp"
         android:singleLine="true"
         android:text="Title of the song"
         android:textColor="@color/white"
-        android:textSize="20dp">
+        android:textSize="20dp"
+
+        >
 
     </TextView>
 

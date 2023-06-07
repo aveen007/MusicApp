@@ -24,7 +24,7 @@ public class PlaylistOperations {
     SQLiteDatabase database;
 
     public PlaylistOperations(Context context) {
-        dbHandler = new PlaylistDBHelper(context);
+        dbHandler = new SongDBHelper(context);
     }
 
     public void open() {
