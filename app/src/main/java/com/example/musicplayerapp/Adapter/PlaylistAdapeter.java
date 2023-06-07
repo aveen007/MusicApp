@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.musicplayerapp.Activity.EditPlaylistDialogue;
@@ -23,6 +24,7 @@ import com.example.musicplayerapp.Activity.MainActivity;
 import com.example.musicplayerapp.Activity.MusicPlayerActivity;
 import com.example.musicplayerapp.Activity.PlaylistDialog;
 import com.example.musicplayerapp.Activity.ViewBy;
+import com.example.musicplayerapp.DB.PlayListSongOperations;
 import com.example.musicplayerapp.DB.PlaylistOperations;
 import com.example.musicplayerapp.Model.AudioModel;
 import com.example.musicplayerapp.Model.MyMediaPlayer;
@@ -38,6 +40,7 @@ public class PlaylistAdapeter extends RecyclerView.Adapter<PlaylistAdapeter.View
     Context context;
 
     TextView noMusic;
+
 
     public PlaylistAdapeter(ArrayList<PlaylistModel> songsList, Context context, TextView noMusic) {
         this.playlists = songsList;
@@ -74,14 +77,14 @@ public class PlaylistAdapeter extends RecyclerView.Adapter<PlaylistAdapeter.View
         {
             //navigate to another activity
 
-            //  MyMediaPlayer.getInstance().reset();
-            //  MyMediaPlayer.currentIndex = holder.getAdapterPosition();
-//            Intent intent = new Intent(context, MusicPlayerActivity.class);
-//            intent.putExtra("LIST", playlists);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            context.startActivity(intent);
 
-            // currentPos = holder.getAdapterPosition();
+            PlayListSongOperations playListSongOperations = new PlayListSongOperations(this.context);
+            ArrayList<AudioModel> songs = playListSongOperations.getAllPlaylistSongs(playlistData);
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.putExtra("LIST", songs);
+            intent.putExtra("PlaylistName", playlistData.getName());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         });
         holder.more.setOnClickListener(v -> ShowMore(v, holder.getAdapterPosition()));
     }

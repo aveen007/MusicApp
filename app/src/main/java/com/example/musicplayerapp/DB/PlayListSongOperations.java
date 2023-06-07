@@ -58,7 +58,7 @@ public class PlayListSongOperations {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
 
-                String songPath = cursor.getString(cursor.getColumnIndexOrThrow((SongDBHelper.COLUMN_PATH)));
+                String songPath = cursor.getString(cursor.getColumnIndexOrThrow((PlaylistSongHelper.COLUMN_SONGPATH)));
                 Cursor cursorSong = database.rawQuery("select * from " + SongDBHelper.TABLE_SONGS + " WHERE " + SongDBHelper.COLUMN_PATH + " =?", new String[]{songPath});
                 if (cursorSong.getCount() > 0) {
                     while (cursorSong.moveToNext()) {

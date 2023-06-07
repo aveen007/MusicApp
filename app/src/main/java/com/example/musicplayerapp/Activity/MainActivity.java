@@ -58,12 +58,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RecyclerView recyclerView, recyclerViewPlaylist;
     ArrayList<AudioModel> songsList = new ArrayList<>();
     ArrayList<AudioModel> favSongsList = new ArrayList<>();
+    ArrayList<AudioModel> playListSongsList = new ArrayList<>();
     SongOperations songOperations = new SongOperations(this);
     private String searchText = "";
     private String Artist = "";
     private String Album = "";
     private ViewBy viewBy = ViewBy.SONG;
-    private boolean favouriteFlag = false;
+    private boolean isInPlaylist = false;
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         Artist = (String) getIntent().getSerializableExtra("ARTIST");
+        playListSongsList = (ArrayList<AudioModel>) getIntent().getSerializableExtra("LIST");
         Album = (String) getIntent().getSerializableExtra("ALBUM");
         if (Artist != null) {
 
@@ -145,6 +147,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         // viewBy = ViewBy.SONG;
 
+        if (playListSongsList != null) {
+            songsList = playListSongsList;
+            String playlistName = (String) getIntent().getSerializableExtra("PlaylistName");
+            songsTV.setText(playlistName);
+
+        }
         if (songsList.size() == 0) {
             noMusicTextView.setVisibility(View.VISIBLE);
         } else {
@@ -214,12 +222,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolBar.setVisibility(View.VISIBLE);
         toolBar1.setVisibility(View.INVISIBLE);
         songsTV.setText("Songs");
+
+        songsList = songOperations.getAllSongs();
         if (songsList.size() == 0) {
             noMusicTextView.setVisibility(View.VISIBLE);
         } else {
             noMusicTextView.setVisibility(View.GONE);
 
         }
+
         getSongListInActivity(songsList);
     }
 
@@ -318,6 +329,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void getPlaylistInActivity() {
         PlaylistOperations playlistOperations = new PlaylistOperations(this);
+
 
         ArrayList<PlaylistModel> playlists = playlistOperations.getAllPlaylists();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
