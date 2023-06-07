@@ -16,12 +16,14 @@ public class PlaylistSongHelper {
             + " INTEGER PRIMARY KEY, " +
 
             COLUMN_PLAYLISTNAME + " TEXT " +
-            " REFERENCES " + PlaylistDBHelper.TABLE_PLAYLIST + " (" + PlaylistDBHelper.COLUMN_NAME + ")," +
+            " REFERENCES " + PlaylistDBHelper.TABLE_PLAYLIST + " (" + PlaylistDBHelper.COLUMN_NAME + ")" +
+            "ON DELETE CASCADE" +
+            "," +
 
             COLUMN_SONGPATH + " TEXT " +
             " REFERENCES " + SongDBHelper.TABLE_SONGS + " (" + SongDBHelper.COLUMN_PATH + ")" +
 
-            ")";
+            " ON DELETE CASCADE)";
 
 
 }

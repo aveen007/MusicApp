@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String Artist = "";
     private String Album = "";
     private ViewBy viewBy = ViewBy.SONG;
-    private boolean isInPlaylist = false;
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override

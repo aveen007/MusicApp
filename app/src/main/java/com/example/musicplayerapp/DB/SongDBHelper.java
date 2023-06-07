@@ -16,7 +16,7 @@ public class SongDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ARTIST = "artist";
     public static final String COLUMN_ALBUM = "album";
     public static final String COLUMN_FAVOURITE = "favourite";
-    private static final String DATABASE_NAME = "songs17.db";
+    private static final String DATABASE_NAME = "songs21.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_CREATE_SONG = "CREATE TABLE " + TABLE_SONGS + " (" + COLUMN_ID
             + " INTEGER, " + COLUMN_TITLE
@@ -35,7 +35,14 @@ public class SongDBHelper extends SQLiteOpenHelper {
     }
 
     @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        db.execSQL("PRAGMA foreign_keys=ON");
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase db) {
+        // db.execSQL("PRAGMA foreign_keys=ON");
         db.execSQL(TABLE_CREATE_SONG);
         db.execSQL(PlaylistDBHelper.TABLE_CREATE_PLAYLIST);
         try {
