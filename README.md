@@ -11,3 +11,4 @@ This music app has the following features:
 
 The project was done relying on the built in MediaProvider for basic features and enhanced with an SQLITE database for advanced features.
 You can see the ERD bellow.
+![alt text](https://github.com/aveen007/MusicApp/blob/master/ERD.png)
