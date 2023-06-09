@@ -17,7 +17,7 @@ public class PlaylistSongHelper {
 
             COLUMN_PLAYLISTNAME + " TEXT " +
             " REFERENCES " + PlaylistDBHelper.TABLE_PLAYLIST + " (" + PlaylistDBHelper.COLUMN_NAME + ")" +
-            "ON DELETE CASCADE" +
+            "ON DELETE CASCADE ON UPDATE CASCADE" +
             "," +
 
             COLUMN_SONGPATH + " TEXT " +
